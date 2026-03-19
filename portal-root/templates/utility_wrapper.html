@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}{{ utility.name }} | Utility Portal{% endblock %}
+
+{% block breadcrumb %}
+<a href="/">Dashboard</a> <span class="separator">/</span>
+<span class="color-text">{{ utility.category | replace('_', ' ') | title }}</span> <span class="separator">/</span>
+<strong>{{ utility.name }}</strong>
+{% endblock %}
+
+{% block content %}
+<div class="utility-header">
+    <h1 class="gradient-text">{{ utility.name }}</h1>
+    <p class="lead-desc">{{ utility.description }}</p>
+</div>
+
+<div class="utility-container glass-panel">
+    {{ utility_html | safe }}
+</div>
+{% endblock %}

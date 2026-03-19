@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Utility Portal{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1 class="gradient-text">Welcome Back</h1>
+    <p>Select a utility from the grid below or use the sidebar to search.</p>
+</div>
+
+<div class="utils-grid" id="utilsGrid">
+    {% for category, utils in registry.categories.items() %}
+    {% for util in utils %}
+    <a href="/utility/{{ util.category }}/{{ util.id.split('/')[1] }}" class="util-card"
+        data-name="{{ util.name.lower() }}" data-tags="{{ util.tags | join(',') | lower }}">
+        <div class="card-glow"></div>
+        <div class="card-content">
+            <div class="card-header">
+                <span class="card-icon">⚙️</span>
+                <h3>{{ util.name }}</h3>
+            </div>
+            <p class="card-desc">{{ util.description }}</p>
+            <div class="card-tags">
+                {% for tag in util.tags %}
+                <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+    {% endfor %}
+</div>
+
+<div id="no-results" style="display: none; text-align: center; margin-top: 40px; color: var(--text-secondary);">
+    <h3>No utilities found matching your search.</h3>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Utility Portal{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Load HTMX for easy Python util forms optionally -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="/" style="text-decoration:none; display:flex; align-items:center; gap:16px; color:inherit;">
+                    <div class="logo-box">
+                        <span class="logo-icon">⚡</span>
+                    </div>
+                    <h2>Utility Portal</h2>
+                </a>
+            </div>
+            
+            <div class="sidebar-search">
+                <input type="text" id="searchInput" placeholder="Search utilities..." onkeyup="filterUtilities()">
+            </div>
+            
+            <div class="category-list">
+                {% for category, utils in registry.categories.items() %}
+                    <div class="category-group">
+                        <div class="category-title" onclick="toggleCategory('{{ category }}')">
+                            <span>{{ category | replace('_', ' ') | title }}</span>
+                            <span class="caret" id="caret-{{ category }}">▼</span>
+                        </div>
+                        <ul class="utility-links" id="list-{{ category }}">
+                            {% for util in utils %}
+                                <li>
+                                    <a href="/utility/{{ util.category }}/{{ util.id.split('/')[1] }}" class="util-link" data-name="{{ util.name.lower() }}" data-tags="{{ util.tags | join(',') | lower }}">
+                                        {{ util.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content">
+            <header class="top-nav">
+                <button id="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                <div class="breadcrumb">
+                    {% block breadcrumb %}<a href="/">Dashboard</a>{% endblock %}
+                </div>
+            </header>
+            
+            <div class="scroll-container">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
