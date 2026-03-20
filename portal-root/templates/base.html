@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Utility Portal{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=2">
     <!-- Load HTMX for easy Python util forms optionally -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script>
+        // Apply theme immediately to prevent flicker
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.classList.add('light-theme');
+        }
+    </script>
     {% block extra_head %}{% endblock %}
 </head>
+
 <body>
     <div class="layout">
         <!-- Sidebar -->
@@ -22,28 +30,29 @@
                     <h2>Utility Portal</h2>
                 </a>
             </div>
-            
+
             <div class="sidebar-search">
                 <input type="text" id="searchInput" placeholder="Search utilities..." onkeyup="filterUtilities()">
             </div>
-            
+
             <div class="category-list">
                 {% for category, utils in registry.categories.items() %}
-                    <div class="category-group">
-                        <div class="category-title" onclick="toggleCategory('{{ category }}')">
-                            <span>{{ category | replace('_', ' ') | title }}</span>
-                            <span class="caret" id="caret-{{ category }}">▼</span>
-                        </div>
-                        <ul class="utility-links" id="list-{{ category }}">
-                            {% for util in utils %}
-                                <li>
-                                    <a href="/utility/{{ util.category }}/{{ util.id.split('/')[1] }}" class="util-link" data-name="{{ util.name.lower() }}" data-tags="{{ util.tags | join(',') | lower }}">
-                                        {{ util.name }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
+                <div class="category-group">
+                    <div class="category-title" onclick="toggleCategory('{{ category }}')">
+                        <span>{{ category | replace('_', ' ') | title }}</span>
+                        <span class="caret" id="caret-{{ category }}">▼</span>
                     </div>
+                    <ul class="utility-links" id="list-{{ category }}">
+                        {% for util in utils %}
+                        <li>
+                            <a href="/utility/{{ util.category }}/{{ util.id.split('/')[1] }}" class="util-link"
+                                data-name="{{ util.name.lower() }}" data-tags="{{ util.tags | join(',') | lower }}">
+                                {{ util.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
                 {% endfor %}
             </div>
         </nav>
@@ -52,16 +61,21 @@
         <main class="content">
             <header class="top-nav">
                 <button id="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
-                <div class="breadcrumb">
+                <div class="breadcrumb" style="flex:1;">
                     {% block breadcrumb %}<a href="/">Dashboard</a>{% endblock %}
                 </div>
+                <button id="theme-toggle" onclick="toggleTheme()" class="theme-btn" title="Toggle Theme">
+                    <span class="icon-dark">🌙</span>
+                    <span class="icon-light">☀️</span>
+                </button>
             </header>
-            
+
             <div class="scroll-container">
                 {% block content %}{% endblock %}
             </div>
         </main>
     </div>
-    <script src="/static/script.js"></script>
+    <script src="/static/script.js?v=2"></script>
 </body>
+
 </html>

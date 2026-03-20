@@ -20,7 +20,7 @@ function toggleSidebar() {
 function filterUtilities() {
     const input = document.getElementById('searchInput');
     const filter = input.value.toLowerCase();
-    
+
     // Filter Sidebar Links
     const sidebarLinks = document.querySelectorAll('.util-link');
     sidebarLinks.forEach(link => {
@@ -36,7 +36,7 @@ function filterUtilities() {
     // Filter Dashboard Cards if present
     const cards = document.querySelectorAll('.util-card');
     let cardsVisible = 0;
-    
+
     cards.forEach(card => {
         const name = card.getAttribute('data-name');
         const tags = card.getAttribute('data-tags');
@@ -47,7 +47,7 @@ function filterUtilities() {
             card.style.display = "none";
         }
     });
-    
+
     // Show no results message if dashboard view
     const noResults = document.getElementById('no-results');
     if (noResults && cards.length > 0) {
@@ -56,5 +56,17 @@ function filterUtilities() {
         } else {
             noResults.style.display = "none";
         }
+    }
+}
+
+// Theme toggle logic
+function toggleTheme() {
+    const root = document.documentElement;
+    if (root.classList.contains('light-theme')) {
+        root.classList.remove('light-theme');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        root.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
     }
 }
